@@ -1,0 +1,20 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "adminUsername": {
+            "value": "azureadmin"
+        },
+        "adminPassword": {
+            "reference": {
+                "keyVault": {
+                    "id": "/subscriptions/730f756f-697c-454f-a689-531bc3a92c42/resourceGroups/CuriosJordanPortfolioRG/providers/Microsoft.KeyVault/vaults/{vault-name}"
+                },
+                "secretName": "adminPassword"
+            }
+        },
+        "dnsNameForPublicIP": {
+            "value": "curiousjordan.club"
+        }
+    }
+}
