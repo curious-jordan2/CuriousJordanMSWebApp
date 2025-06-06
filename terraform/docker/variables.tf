@@ -24,6 +24,11 @@ variable "docker_file_path" {
 	type = string
 }
 
+variable "docker_file" {
+	description = "Docker file name and you can include path to docker file."
+	type = string
+}
+
 
 variable "image" {
 	description = "The Docker image to use for the container"

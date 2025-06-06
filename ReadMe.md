@@ -14,3 +14,9 @@ https://curiousjordannp.centralus.cloudapp.azure.com:8172/MsDeploy.axd
 
 
 ```
+
+## Publish app to root directory
+```powershell
+dotnet publish "C:\Users\jorda\Documents\Github\CuriousJordanMSWebApp\CuriousJordanMSWebApp" -c Release -o C:\Users\jorda\Documents\Github\CuriousJordanMSWebApp\publish
+
+```

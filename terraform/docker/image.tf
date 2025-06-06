@@ -3,6 +3,6 @@ resource "docker_image" "image" {
     name = var.image
     build {
         context = var.docker_file_path
-        dockerfile = "Dockerfile"
+        dockerfile = var.docker_file
     }
 }
