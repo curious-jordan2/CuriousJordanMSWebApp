@@ -9,7 +9,7 @@ resource "docker_container" "container" {
     image        = docker_image.image.image_id
     network_mode = local.network_mode
 
-    command      = ["powershell", "-Command", "Start-Sleep -Seconds 3600"]
+    # command      = ["powershell", "-Command", "Start-Sleep -Seconds 3600"]
 
     ports {
     internal = 80

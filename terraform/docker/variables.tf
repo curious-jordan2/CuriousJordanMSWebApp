@@ -19,22 +19,16 @@ variable "local_os" {
 	}
 }
 
+variable "docker_file_path" {
+	description = "Path to docker file."
+	type = string
+}
+
 
 variable "image" {
 	description = "The Docker image to use for the container"
 	type        = string
 	default     = "ubuntu:20.04"
-
-	validation {
-    condition = contains([
-		"ubuntu:20.04",
-		"ubuntu:22.04",
-		"mcr.microsoft.com/windows/servercore:ltsc2025",
-		"mcr.microsoft.com/windows/servercore:ltsc2022",
-		"mcr.microsoft.com/windows/servercore:ltsc2019"
-    ], var.image)
-    error_message = "The image must be one of: ubuntu:20.04, ubuntu:22.04, mcr.microsoft.com/windows/servercore:ltsc2025, mcr.microsoft.com/windows/servercore:ltsc2022, or mcr.microsoft.com/windows/servercore:ltsc2019"
-	}
 }
 
 variable "container_name" {
