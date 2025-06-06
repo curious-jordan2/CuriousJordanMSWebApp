@@ -362,6 +362,13 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 
-terraform/.terraform/providers/
-
 CuriousJordanMSWebApp/wwwroot/lib/
+
+terraform/azure/.terraform/providers
+terraform/azure/.terraform.lock.hcl
+terraform/azure/.terraform/terraform.tfstate
+terraform/azure/test.txt
+terraform/docker/.terraform/providers
+terraform/docker/.terraform.lock.hcl
+terraform/docker/.terraform/terraform.tfstate
+terraform/docker/test.txt
