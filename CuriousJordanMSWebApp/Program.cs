@@ -3,6 +3,9 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
+// Listen on port 8000
+builder.WebHost.UseUrls("http://*:8000");
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

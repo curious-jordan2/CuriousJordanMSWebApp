@@ -15,8 +15,12 @@ https://curiousjordannp.centralus.cloudapp.azure.com:8172/MsDeploy.axd
 
 ```
 
-## Publish app to root directory
-```powershell
+## Publish app to root directory, terraform azure directory, or Terraform docker directory
+```pwsh
+# publish to root directory
 dotnet publish "C:\Users\jorda\Documents\Github\CuriousJordanMSWebApp\CuriousJordanMSWebApp" -c Release -o C:\Users\jorda\Documents\Github\CuriousJordanMSWebApp\publish
-
+```
+```pwsh
+# publish to root directory
+dotnet publish "C:\Users\jorda\Documents\Github\CuriousJordanMSWebApp\CuriousJordanMSWebApp" -c Release -o C:\Users\jorda\Documents\Github\CuriousJordanMSWebApp\terraform\docker\publish
 ```
