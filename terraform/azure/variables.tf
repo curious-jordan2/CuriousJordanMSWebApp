@@ -50,4 +50,17 @@ variable "admin_password" {
 	description = "Admin password must meet Azure complexity requirements"
 	type        = string
 	sensitive   = true
+	validation {
+		condition = (
+		length(var.admin_password) >= 8 &&
+		length(var.admin_password) <= 123 &&
+		(
+		length(regexall("[A-Z]", var.admin_password)) > 0 +
+		length(regexall("[a-z]", var.admin_password)) > 0 +
+		length(regexall("[0-9]", var.admin_password)) > 0 +
+		length(regexall("[!@#\\$%\\^&\\*\\(\\)_\\+\\[\\]\\{\\}\\|;:,.<>\\/?]", var.admin_password)) > 0
+		) >= 3
+    )
+    error_message = "Password must be 8–123 characters and contain at least 3 of: uppercase, lowercase, number, special character."
+	}
 }
