@@ -14,12 +14,16 @@ New-Item -Path "C:\inetpub\wwwroot\CJP" -ItemType Directory -Force
 # Extract zip
 Expand-Archive -Path "C:\dotnetapp.zip" -DestinationPath "C:\inetpub\wwwroot\CJP" -Force
 
-# Remove Default Web Site
+# Set permissions so IIS can read and serve files
+$path = "C:\inetpub\wwwroot\CJP"
+icacls $path /grant "IIS_IUSRS:(OI)(CI)(RX)" /T
+icacls $path /grant "IUSR:(OI)(CI)(RX)" /T
+icacls $path /grant "NETWORK SERVICE:(OI)(CI)(RX)" /T
+
+# Remove Default Web Site if it exists
 Remove-Website -Name "Default Web Site" -ErrorAction SilentlyContinue
 
 # Set up IIS site and app pool
 Import-Module WebAdministration
 New-WebAppPool -Name "CJPPool"
-Set-ItemProperty IIS:\AppPools\CJPPool -Name managedRuntimeVersion -Value ""
-
-New-Website -Name "CJP" -Port 80 -PhysicalPath "C:\inetpub\wwwroot\CJP" -ApplicationPool "CJPPool"
+Set-ItemProperty IIS:\AppPools\CJPPool -Name managedRunti
