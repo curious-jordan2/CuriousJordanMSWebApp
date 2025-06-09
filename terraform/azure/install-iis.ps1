@@ -26,4 +26,7 @@ Remove-Website -Name "Default Web Site" -ErrorAction SilentlyContinue
 # Set up IIS site and app pool
 Import-Module WebAdministration
 New-WebAppPool -Name "CJPPool"
-Set-ItemProperty IIS:\AppPools\CJPPool -Name managedRunti
+Set-ItemProperty IIS:\AppPools\CJPPool -Name managedRuntimeVersion -Value ""
+
+# Change this path if you need to point to 'wwwroot'
+New-Website -Name "CJP" -Port 80 -PhysicalPath "C:\inetpub\wwwroot\CJP" -ApplicationPool "CJPPool"
