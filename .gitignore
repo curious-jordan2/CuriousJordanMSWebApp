@@ -378,3 +378,4 @@ terraform/docker/.terraform.lock.hcl
 terraform/docker/.terraform/terraform.tfstate
 terraform/docker/test.txt
 terraform/azure/terraform.tfstate
+
