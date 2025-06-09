@@ -1,5 +1,5 @@
 resource "azurerm_windows_virtual_machine" "vm" {
-    name                = var.vm_name
+    name                = "${var.application}-${var.environment}"
     location            = var.location
     resource_group_name = azurerm_resource_group.rg.name
     size                = "Standard_B1s" # Cheapest option
@@ -24,7 +24,7 @@ resource "azurerm_windows_virtual_machine" "vm" {
     provision_vm_agent = true
 
     tags = {
-        environment = "dev"
+        environment = var.environment
     }
 }
 
@@ -42,7 +42,7 @@ resource "azurerm_virtual_machine_extension" "iis_install" {
 
     settings = <<SETTINGS
 {
-    "fileUris": ["https://raw.githubusercontent.com/your-username/deploy-scripts/main/install-iis.ps1"],
+    "fileUris": ["https://raw.githubusercontent.com/curious-jordan2/CuriousJordanMSWebApp/refs/heads/configure-terraform/terraform/azure/install-iis.ps1"],
     "commandToExecute": "powershell -ExecutionPolicy Unrestricted -File install-iis.ps1"
 }
 SETTINGS
