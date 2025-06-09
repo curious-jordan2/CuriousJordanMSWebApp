@@ -1,4 +1,4 @@
-# Configure providers
+# Configure the Microsoft Azure Provider
 provider "azurerm" {
     features {}
 }

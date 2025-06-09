@@ -1,34 +1,51 @@
-# Declare all variables with types and descriptions
+variable "application" {
+	description = "The application name for the deployment."
+	type        = string
+	default     = "Hello"
+	validation {
+	condition     = length(var.application) > 2
+	error_message = "The application name must be longer than two characters."
+	}
+}
+
+
+variable "location" {
+	description = "The Azure region to deploy resources into."
+	type        = string
+
+	validation {
+		condition = contains([
+		"eastus",
+		"eastus2",
+		"centralus",
+		"northcentralus",
+		"southcentralus",
+		"westus",
+		"westus2",
+		"westus3"
+		], var.region)
+		error_message = "The region must be one of the allowed US regions: eastus, eastus2, centralus, northcentralus, southcentralus, westus, westus2, westus3."
+		}
+}
+
+variable "resource_group_name" {
+	default = "example-rg"
+}
+
 variable "vm_name" {
-    type = string
-    default = "WebAppVM"
-    description = "Name for the Virtual Machine"
+	default = "example-vm"
+	validation {
+		condition = length(var.vm_name) > 2 && length(var.vm_name) < 14
+		error_message = "Length of vm name must be greater than 2 and less than 14 characters."
+	}
 }
 
 variable "admin_username" {
-    type = string
-    description = "Username for the Virtual Machine adminstrator"
+	default = "azureuser"
 }
 
 variable "admin_password" {
-    type = string
-    description = "Password for the Virtual Machine adminstrator"
-    sensitive = true
-}
-
-variable "dns_name_for_public_ip" {
-    type = string
-    description = "Unique DNS Name for the Public IP use to access the Virtual Machine"
-}
-
-variable "windows_os_version" {
-    type = string
-    default = "2022-datracenter-azure-edition"
-    description = "The Windows version for the VM"
-}
-
-variable "vm_size" {
-    type = string
-    default = "Standard_B1s"
-    description = "Size of the Virtual Machine"
+	description = "Admin password must meet Azure complexity requirements"
+	type        = string
+	sensitive   = true
 }
