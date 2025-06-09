@@ -364,12 +364,16 @@ FodyWeavers.xsd
 
 CuriousJordanMSWebApp/wwwroot/lib/
 
-terraform/azure/.terraform/providers
+terraform/azure/.terraform/*
 terraform/azure/.terraform.lock.hcl
 terraform/azure/.terraform/terraform.tfstate
 terraform/azure/test.txt
+terraform/azure/.terraform.tfstate.lock.info
+terraform/azure/terraform.tfstate.backup
+terraform/azure/terraform.tfstate
+terraform/azure/terraform.tfstate
+terraform/docker/.terraform/*
 terraform/docker/.terraform/providers
 terraform/docker/.terraform.lock.hcl
 terraform/docker/.terraform/terraform.tfstate
 terraform/docker/test.txt
-terraform/azure/.terraform.tfstate.lock.info
