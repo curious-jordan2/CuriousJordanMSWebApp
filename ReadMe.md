@@ -23,6 +23,9 @@ dotnet publish "C:\Users\jorda\Documents\Github\CuriousJordanMSWebApp\CuriousJor
 ```pwsh
 # publish to erraform Azure directory
 dotnet publish "C:\Users\jorda\Documents\Github\CuriousJordanMSWebApp\CuriousJordanMSWebApp" -c Release -o C:\Users\jorda\Documents\Github\CuriousJordanMSWebApp\terraform\azure\publish
+# zip files
+cd ./publish/
+Compress-Archive * ../dotnetapp.zip
 ```
 ```pwsh
 # publish to Terraform Docker directory
