@@ -42,7 +42,7 @@ resource "azurerm_virtual_machine_extension" "iis_install" {
 
     settings = <<SETTINGS
 {
-    "fileUris": ["https://raw.githubusercontent.com/curious-jordan2/CuriousJordanMSWebApp/refs/heads/configure-terraform/terraform/azure/install-iis.ps1"],
+    "fileUris": ["https://raw.githubusercontent.com/curious-jordan2/CuriousJordanMSWebApp/refs/heads/dev/terraform/azure/install-iis.ps1"],
     "commandToExecute": "powershell -ExecutionPolicy Unrestricted -File install-iis.ps1"
 }
 SETTINGS
