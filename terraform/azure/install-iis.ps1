@@ -46,30 +46,30 @@ Set-ItemProperty IIS:\AppPools\CJPPool -Name processModel.identityType -Value "A
 
 New-Website -Name "CJP" -Port 80 -PhysicalPath $sitePath -ApplicationPool "CJPPool"
 
-# ----------------------------
-# 7. Install and Configure OpenSSH for Password Login
-# ----------------------------
-# Install OpenSSH Server if not already installed
-Add-WindowsCapability -Online -Name OpenSSH.Server~~~~0.0.1.0
+# # ----------------------------
+# # 7. Install and Configure OpenSSH for Password Login
+# # ----------------------------
+# # Install OpenSSH Server if not already installed
+# Add-WindowsCapability -Online -Name OpenSSH.Server~~~~0.0.1.0
 
-# Start and enable OpenSSH service
-Start-Service sshd
-Set-Service -Name sshd -StartupType 'Automatic'
+# # Start and enable OpenSSH service
+# Start-Service sshd
+# Set-Service -Name sshd -StartupType 'Automatic'
 
-# Set PowerShell as the default shell for SSH
-New-ItemProperty -Path "HKLM:\SOFTWARE\OpenSSH" -Name DefaultShell -Value "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe" -PropertyType String -Force
+# # Set PowerShell as the default shell for SSH
+# New-ItemProperty -Path "HKLM:\SOFTWARE\OpenSSH" -Name DefaultShell -Value "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe" -PropertyType String -Force
 
-# Allow SSH through firewall
-New-NetFirewallRule -Name sshd -DisplayName "OpenSSH Server (Port 22)" -Enabled True -Protocol TCP -Direction Inbound -Action Allow -LocalPort 22
+# # Allow SSH through firewall
+# New-NetFirewallRule -Name sshd -DisplayName "OpenSSH Server (Port 22)" -Enabled True -Protocol TCP -Direction Inbound -Action Allow -LocalPort 22
 
-# Modify sshd_config to allow password authentication
-$sshdConfigPath = "$env:ProgramData\ssh\sshd_config"
-(Get-Content $sshdConfigPath) `
-    -replace '^#?PasswordAuthentication no', 'PasswordAuthentication yes' `
-    -replace '^#?PubkeyAuthentication no', 'PubkeyAuthentication yes' `
-    | Set-Content $sshdConfigPath
+# # Modify sshd_config to allow password authentication
+# $sshdConfigPath = "$env:ProgramData\ssh\sshd_config"
+# (Get-Content $sshdConfigPath) `
+#     -replace '^#?PasswordAuthentication no', 'PasswordAuthentication yes' `
+#     -replace '^#?PubkeyAuthentication no', 'PubkeyAuthentication yes' `
+#     | Set-Content $sshdConfigPath
 
-Restart-Service sshd
+# Restart-Service sshd
 
 # ----------------------------
 # 8. Output Deployment Status

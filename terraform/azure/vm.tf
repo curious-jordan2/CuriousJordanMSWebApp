@@ -2,16 +2,19 @@ resource "azurerm_windows_virtual_machine" "vm" {
     name                = "${var.application}-${var.environment}"
     location            = var.location
     resource_group_name = azurerm_resource_group.rg.name
-    size                = "Standard_B1s" # Cheapest option
+    size                = "Standard_B2s" # Cheapest option
     admin_username      = var.admin_username
     admin_password      = var.admin_password
     network_interface_ids = [
     azurerm_network_interface.nic.id
     ]
+    priority            = "Spot"                         # <-- Use Spot instance
+    eviction_policy     = "Deallocate"                   # Keep disk after eviction
 
     os_disk {
         caching              = "ReadWrite"
         storage_account_type = "Standard_LRS"
+        name                 = "${var.application}-${var.environment}-osdisk"
     }
 
     source_image_reference {
