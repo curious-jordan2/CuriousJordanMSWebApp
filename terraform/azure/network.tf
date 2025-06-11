@@ -47,18 +47,6 @@ resource "azurerm_network_security_group" "nsg" {
         source_address_prefix      = "*"
         destination_address_prefix = "*"
     }
-
-    security_rule {
-        name                       = "allow_ssh"
-        priority                   = 1003
-        direction                  = "Inbound"
-        access                     = "Allow"
-        protocol                   = "Tcp"
-        source_port_range          = "*"
-        destination_port_range     = "22"
-        source_address_prefix      = "*" # Replace with your IP like "203.0.113.0/32" for more security
-        destination_address_prefix = "*"
-    }
 }
 
 
