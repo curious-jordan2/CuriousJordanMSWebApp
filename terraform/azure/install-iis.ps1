@@ -1,27 +1,32 @@
-# Install IIS and necessary features
+# ----------------------------
+# 1. Install IIS & Required Features
+# ----------------------------
 Install-WindowsFeature -Name Web-Server, Web-Asp-Net45, Web-ISAPI-Ext, Web-ISAPI-Filter, Web-Mgmt-Console -IncludeManagementTools
 
-# Install .NET 8 Hosting Bundle
+# ----------------------------
+# 2. Install .NET 8 Hosting Bundle
+# ----------------------------
 Invoke-WebRequest -Uri "https://download.visualstudio.microsoft.com/download/pr/7f40b42c-4e4d-43ab-8f23-82e8e2a3e1f7/7a1e274a7d24508e139c1ff276013e8a/dotnet-hosting-8.0.5-win.exe" -OutFile "C:\dotnet-hosting.exe"
 Start-Process -FilePath "C:\dotnet-hosting.exe" -ArgumentList "/quiet" -Wait
 
-# Download the ZIP containing the .NET published site
+# ----------------------------
+# 3. Download and Deploy .NET App
+# ----------------------------
 Invoke-WebRequest -Uri "https://github.com/curious-jordan2/CuriousJordanMSWebApp/raw/refs/heads/dev/terraform/azure/dotnetapp.zip" -OutFile "C:\dotnetapp.zip"
 
-# Create the destination directory
 $sitePath = "C:\inetpub\wwwroot\CJP"
 New-Item -Path $sitePath -ItemType Directory -Force
-
-# Extract the application
 Expand-Archive -Path "C:\dotnetapp.zip" -DestinationPath $sitePath -Force
 
-# Ensure web.config is present at root and DLL path is correct in it (manual check or zip structure control)
+# ----------------------------
+# 4. Create Logs Directory
+# ----------------------------
+$logPath = "$sitePath\logs"
+New-Item -ItemType Directory -Path $logPath -Force
 
-# Create logs directory and set permissions
-$logPath = Join-Path $sitePath "logs"
-New-Item -Path $logPath -ItemType Directory -Force
-
-# Set permissions for IIS to serve files and write logs
+# ----------------------------
+# 5. Set Permissions for App Pool and IIS
+# ----------------------------
 $AppPoolUser = "IIS AppPool\CJPPool"
 icacls $sitePath /grant "IIS_IUSRS:(OI)(CI)(RX)" /T
 icacls $sitePath /grant "IUSR:(OI)(CI)(RX)" /T
@@ -29,19 +34,46 @@ icacls $sitePath /grant "NETWORK SERVICE:(OI)(CI)(RX)" /T
 icacls $sitePath /grant "${AppPoolUser}:(OI)(CI)(RX)" /T
 icacls $logPath /grant "${AppPoolUser}:(OI)(CI)(M)" /T
 
-# Remove Default Web Site if it exists
+# ----------------------------
+# 6. Configure IIS Site & App Pool
+# ----------------------------
+Import-Module WebAdministration
 Remove-Website -Name "Default Web Site" -ErrorAction SilentlyContinue
 
-# Create application pool
-Import-Module WebAdministration
 New-WebAppPool -Name "CJPPool" -Force
-Set-ItemProperty IIS:\AppPools\CJPPool -Name managedRuntimeVersion -Value ""  # No Managed Code for .NET Core
+Set-ItemProperty IIS:\AppPools\CJPPool -Name managedRuntimeVersion -Value ""
 Set-ItemProperty IIS:\AppPools\CJPPool -Name processModel.identityType -Value "ApplicationPoolIdentity"
 
-# Create website bound to port 80
 New-Website -Name "CJP" -Port 80 -PhysicalPath $sitePath -ApplicationPool "CJPPool"
 
-# Final output for verification
-Write-Host "`nDeployment complete. Site should now be accessible on port 80."
-Get-Website -Name "CJP"
-Get-WebAppPoolState -Name "CJPPool"
+# ----------------------------
+# 7. Install and Configure OpenSSH for Password Login
+# ----------------------------
+# Install OpenSSH Server if not already installed
+Add-WindowsCapability -Online -Name OpenSSH.Server~~~~0.0.1.0
+
+# Start and enable OpenSSH service
+Start-Service sshd
+Set-Service -Name sshd -StartupType 'Automatic'
+
+# Set PowerShell as the default shell for SSH
+New-ItemProperty -Path "HKLM:\SOFTWARE\OpenSSH" -Name DefaultShell -Value "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe" -PropertyType String -Force
+
+# Allow SSH through firewall
+New-NetFirewallRule -Name sshd -DisplayName "OpenSSH Server (Port 22)" -Enabled True -Protocol TCP -Direction Inbound -Action Allow -LocalPort 22
+
+# Modify sshd_config to allow password authentication
+$sshdConfigPath = "$env:ProgramData\ssh\sshd_config"
+(Get-Content $sshdConfigPath) `
+    -replace '^#?PasswordAuthentication no', 'PasswordAuthentication yes' `
+    -replace '^#?PubkeyAuthentication no', 'PubkeyAuthentication yes' `
+    | Set-Content $sshdConfigPath
+
+Restart-Service sshd
+
+# ----------------------------
+# 8. Output Deployment Status
+# ----------------------------
+Write-Host "`Deployment complete. Site should be accessible at http://<VM-IP>"
+Write-Host "SSH login is enabled on port 22 using VM's local username and password."
+Write-Host "You can now SSH with: ssh <username>@<VM-IP>"
