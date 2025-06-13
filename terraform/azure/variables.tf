@@ -64,3 +64,8 @@ variable "admin_password" {
 		error_message = "Password must be 8–123 characters and contain at least 3 of: uppercase, lowercase, number, special character."
 	}
 }
+
+variable "git_branch" {
+	description = "The current Git branch"
+	type        = string
+}

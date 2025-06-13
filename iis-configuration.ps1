@@ -1,4 +1,14 @@
 # ----------------------------
+# 0. Define parameters
+# ----------------------------
+$siteDomain = "curiousjordan.club"
+$siteName = "CJP"
+$siteWebAppPoolName = "CJPPool"
+$bindingInfo = "*:80:$siteDomain"
+$bindingInfoWWW = "*:80:www.$siteDomain"
+$gitBranch - $env:TF_VAR_git_branch
+
+# ----------------------------
 # 1. Install IIS & Required Features
 # ----------------------------
 Install-WindowsFeature -Name Web-Server, Web-Asp-Net45, Web-ISAPI-Ext, Web-ISAPI-Filter, Web-Mgmt-Console -IncludeManagementTools
@@ -12,7 +22,7 @@ Start-Process -FilePath "C:\dotnet-hosting.exe" -ArgumentList "/quiet" -Wait
 # ----------------------------
 # 3. Download and Deploy .NET App
 # ----------------------------
-Invoke-WebRequest -Uri "https://github.com/curious-jordan2/CuriousJordanMSWebApp/raw/refs/heads/dev/terraform/azure/dotnetapp.zip" -OutFile "C:\dotnetapp.zip"
+Invoke-WebRequest -Uri "https://github.com/curious-jordan2/CuriousJordanMSWebApp/raw/refs/heads/$gitBranch/terraform/azure/dotnetapp.zip" -OutFile "C:\dotnetapp.zip"
 
 $sitePath = "C:\inetpub\wwwroot\CJP"
 New-Item -Path $sitePath -ItemType Directory -Force
@@ -37,18 +47,19 @@ icacls $logPath /grant "${AppPoolUser}:(OI)(CI)(M)" /T
 # ----------------------------
 # 6. Configure IIS Site & App Pool
 # ----------------------------
-Import-Module WebAdministration
-Remove-Website -Name "Default Web Site" -ErrorAction SilentlyContinue
 
-New-WebAppPool -Name "CJPPool" -Force
+Import-Module WebAdministration
+# Remove Default Website
+Remove-Website -Name "Default Web Site" -ErrorAction SilentlyContinue
+# Create New Web App Pool
+New-WebAppPool -Name $siteWebAppPoolName  -Force
 Set-ItemProperty IIS:\AppPools\CJPPool -Name managedRuntimeVersion -Value ""
 Set-ItemProperty IIS:\AppPools\CJPPool -Name processModel.identityType -Value "ApplicationPoolIdentity"
 
-New-Website -Name "CJP" -Port 80 -PhysicalPath $sitePath -ApplicationPool "CJPPool"
+New-Website -Name $siteName -Port 80 -PhysicalPath $sitePath -ApplicationPool $siteWebAppPoolName
+# Add Web Binding
+New-WebBinding -Name $siteName -Protocol "http" -BindingInformation $bindingInfo
+New-WebBinding -Name $siteName -Protocol "http" -BindingInformation $bindingInfoWWW
 
-# ----------------------------
-# 8. Output Deployment Status
-# ----------------------------
-Write-Host "`Deployment complete. Site should be accessible at http://<VM-IP>"
 
 iisreset
