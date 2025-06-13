@@ -43,9 +43,9 @@ resource "azurerm_virtual_machine_extension" "configure-iis" {
     settings = <<SETTINGS
     {
     "fileUris": [
-        "https://github.com/curious-jordan2/CuriousJordanMSWebApp/raw/refs/heads/${var.git_branch}/iis-configuration.ps1"
+        "https://github.com/curious-jordan2/CuriousJordanMSWebApp/raw/refs/heads/add-domain-and-static-ip/iis-configuration.ps1"
     ],
-    "commandToExecute": "powershell -ExecutionPolicy Unrestricted -Command \"[System.Environment]::SetEnvironmentVariable('TF_VAR_git_branch', '${var.git_branch}', 'Machine'); ./iis-configuration.ps1\""
+    "commandToExecute": "powershell -ExecutionPolicy Unrestricted -Command \"[System.Environment]::SetEnvironmentVariable('TF_VAR_git_branch', 'add-domain-and-static-ip', 'Machine'); ./iis-configuration.ps1\""
     }
     SETTINGS
     }

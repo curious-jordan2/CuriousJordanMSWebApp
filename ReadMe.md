@@ -1,5 +1,28 @@
 # This document provides instructions for deploying this webapp.
 
+# Prerequisites
+
+## Install Required Packages
+```pwsh
+dotnet restore
+```
+```sh
+dotnet restore
+```
+
+## Set Git Branch
+Prior to beginning development or deploying you need to execute the setGitBranch powershell or bash files to set the current branch as an evironment variable
+
+```powershell
+.\setGitBranch.ps1
+```
+
+```bash
+./script_name.sh
+```
+
+
+# Deploy Using ARM Templates
 ## Use this powershell command to validate deployment template for the website:
 
 ```powershell
@@ -15,11 +38,19 @@ https://curiousjordannp.centralus.cloudapp.azure.com:8172/MsDeploy.axd
 
 ```
 
-## Publish app to root directory, Terraform Azure directory, or Terraform Docker directory
+# Deploy Using Terraform
+
+## Docker Deployment
+
+### Publish app to Terraform Docker directory
 ```pwsh
-# publish to root directory
-dotnet publish "C:\Users\jorda\Documents\Github\CuriousJordanMSWebApp\CuriousJordanMSWebApp" -c Release -o C:\Users\jorda\Documents\Github\CuriousJordanMSWebApp\publish
+# publish to Terraform Docker directory
+dotnet publish "C:\Users\jorda\Documents\Github\CuriousJordanMSWebApp\CuriousJordanMSWebApp" -c Release -o C:\Users\jorda\Documents\Github\CuriousJordanMSWebApp\terraform\docker\publish
 ```
+
+## Deloy Using Azure
+
+### Publish app to Terraform Azure directory
 ```pwsh
 # publish to erraform Azure directory
 dotnet publish "C:\Users\jorda\Documents\Github\CuriousJordanMSWebApp\CuriousJordanMSWebApp" -c Release -o C:\Users\jorda\Documents\Github\CuriousJordanMSWebApp\terraform\azure\publish
@@ -27,7 +58,9 @@ dotnet publish "C:\Users\jorda\Documents\Github\CuriousJordanMSWebApp\CuriousJor
 cd .\publish\
 Compress-Archive * ..\dotnetapp.zip
 ```
+
 ```pwsh
-# publish to Terraform Docker directory
-dotnet publish "C:\Users\jorda\Documents\Github\CuriousJordanMSWebApp\CuriousJordanMSWebApp" -c Release -o C:\Users\jorda\Documents\Github\CuriousJordanMSWebApp\terraform\docker\publish
+cd .\terraform\azure\
+tf plan ## test deployment
+tf apply ## live deployment
 ```

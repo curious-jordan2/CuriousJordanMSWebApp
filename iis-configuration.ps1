@@ -6,7 +6,7 @@ $siteName = "CJP"
 $siteWebAppPoolName = "CJPPool"
 $bindingInfo = "*:80:$siteDomain"
 $bindingInfoWWW = "*:80:www.$siteDomain"
-$gitBranch - $env:TF_VAR_git_branch
+$gitBranch = 'add-domain-and-static-ip'
 
 # ----------------------------
 # 1. Install IIS & Required Features
