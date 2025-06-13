@@ -12,6 +12,7 @@ $gitBranch = 'add-domain-and-static-ip'
 # 1. Install IIS & Required Features
 # ----------------------------
 Install-WindowsFeature -Name Web-Server, Web-Asp-Net45, Web-ISAPI-Ext, Web-ISAPI-Filter, Web-Mgmt-Console -IncludeManagementTools
+Enable-PSRemoting -Force
 
 # ----------------------------
 # 2. Install .NET 8 Hosting Bundle
