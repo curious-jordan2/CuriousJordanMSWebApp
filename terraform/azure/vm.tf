@@ -55,9 +55,7 @@ resource "azurerm_virtual_machine_extension" "set_env_vars" {
     type                 = "CustomScriptExtension"
     type_handler_version = "1.10"
 
-    settings = <<SETTINGS
-    {
-    "commandToExecute": "powershell -ExecutionPolicy Unrestricted -Command \\"[System.Environment]::SetEnvironmentVariable('TF_VAR_git_branch', '${var.git_branch}', 'Machine')\\""
-    }
-    SETTINGS
+    settings = jsonencode({
+    commandToExecute = "powershell -ExecutionPolicy Unrestricted -Command \"[System.Environment]::SetEnvironmentVariable('TF_VAR_git_branch', '${var.git_branch}', 'Machine')\""
+    })
 }
