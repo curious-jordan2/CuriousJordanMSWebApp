@@ -50,7 +50,7 @@ SETTINGS
 
 resource "azurerm_virtual_machine_extension" "set_env_vars" {
     name                 = "set-environment-variables"
-    virtual_machine_id   = azurerm_windows_virtual_machine.my_vm.id
+    virtual_machine_id   = azurerm_windows_virtual_machine.vm.id
     publisher            = "Microsoft.Compute"
     type                 = "CustomScriptExtension"
     type_handler_version = "1.10"
