@@ -41,21 +41,11 @@ resource "azurerm_virtual_machine_extension" "configure-iis" {
     type_handler_version = "1.10"
 
     settings = <<SETTINGS
-{
-    "fileUris": ["https://raw.githubusercontent.com/curious-jordan2/CuriousJordanMSWebApp/refs/heads/${var.git_branch}/terraform/azure/iis-configuration.ps1"],
-    "commandToExecute": "powershell -ExecutionPolicy Unrestricted -File install-iis.ps1"
-}
-SETTINGS
-}
-
-resource "azurerm_virtual_machine_extension" "set_env_vars" {
-    name                 = "set-environment-variables"
-    virtual_machine_id   = azurerm_windows_virtual_machine.vm.id
-    publisher            = "Microsoft.Compute"
-    type                 = "CustomScriptExtension"
-    type_handler_version = "1.10"
-
-    settings = jsonencode({
-    commandToExecute = "powershell -ExecutionPolicy Unrestricted -Command \"[System.Environment]::SetEnvironmentVariable('TF_VAR_git_branch', '${var.git_branch}', 'Machine')\""
-    })
-}
+    {
+    "fileUris": [
+        "https://raw.githubusercontent.com/curious-jordan2/CuriousJordanMSWebApp/refs/heads/${var.git_branch}/terraform/azure/iis-configuration.ps1"
+    ],
+    "commandToExecute": "powershell -ExecutionPolicy Unrestricted -Command \"[System.Environment]::SetEnvironmentVariable('TF_VAR_git_branch', '${var.git_branch}', 'Machine'); ./iis-configuration.ps1\""
+    }
+    SETTINGS
+    }
