@@ -1,4 +1,4 @@
 application = "CJP"
-location      = "centralus"
+location      = "northcentralus"
 environment = "d"
 admin_username = "cjp-admin"
